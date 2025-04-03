@@ -1,25 +1,39 @@
-import Hapi from '@hapi/hapi'
-import { defineRoutes } from './routes'
+import * as Hapi from '@hapi/hapi'
+import { initializeDatabase } from './config/dbDataSource';
+import { itemRoutes } from './routes/item.routes';
+import { configDotenv } from 'dotenv';
 
-const getServer = () => {
+configDotenv();
+
+const getServer = async () => {
     const server = Hapi.server({
-        host: 'localhost',
-        port: 3000,
+        port: process.env.PORT || 3000,
+        host: "0.0.0.0",
     })
 
-    defineRoutes(server)
+    server.route({
+        method: 'GET',
+        path: '/ping',
+        handler: async (request, h) => {
+            return { ok: true };
+        },
+    });
+
+    server.route(itemRoutes);
+
+    await initializeDatabase();;
 
     return server
 }
 
 export const initializeServer = async () => {
-    const server = getServer()
+    const server = await getServer()
     await server.initialize()
     return server
 }
 
 export const startServer = async () => {
-    const server = getServer()
+    const server = await getServer()
     await server.start()
     console.log(`Server running on ${server.info.uri}`)
     return server
