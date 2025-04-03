@@ -32,30 +32,6 @@ export class ItemController {
       price?: number;
     };
 
-    const errors: { field: string; message: string }[] = [];
-
-    if (!name) {
-      errors.push({ field: "name", message: 'Field "name" is required' });
-    }
-
-    if (price === undefined) {
-      errors.push({ field: "price", message: 'Field "price" is required' });
-    } else if (typeof price !== "number" || isNaN(price)) {
-      errors.push({
-        field: "price",
-        message: 'Field "price" must be a number',
-      });
-    } else if (price < 0) {
-      errors.push({
-        field: "price",
-        message: 'Field "price" cannot be negative',
-      });
-    }
-
-    if (errors.length > 0) {
-      return h.response({ errors }).code(400);
-    }
-
     const item = await itemService.createItem(name!, price!);
     return h.response(item).code(201);
   }
@@ -65,26 +41,6 @@ export class ItemController {
       name?: string;
       price?: number;
     };
-
-    const errors: { field: string; message: string }[] = [];
-
-    if (price === undefined) {
-      errors.push({ field: "price", message: 'Field "price" is required' });
-    } else if (typeof price !== "number" || isNaN(price)) {
-      errors.push({
-        field: "price",
-        message: 'Field "price" must be a number',
-      });
-    } else if (price < 0) {
-      errors.push({
-        field: "price",
-        message: 'Field "price" cannot be negative',
-      });
-    }
-
-    if (errors.length > 0) {
-      return h.response({ errors }).code(400);
-    }
 
     const item = await itemService.updateItem(
       Number(request.params.id),
