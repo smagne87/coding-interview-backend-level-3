@@ -1,5 +1,5 @@
 import { AppDataSource } from "../config/dbDataSource";
-import { Item } from "../entities/Item.entity";
+import { Item } from "../entities/item.entity";
 import { Repository } from "typeorm";
 
 export class ItemService {
